@@ -1,128 +1,76 @@
 /**
- * This function must add two numbers and return sum of numbers
- * @param a {number|string}
- * @param b {number|string}
+ * Adds two numbers and returns the sum.
+ * @param {number|string} a
+ * @param {number|string} b
  * @returns {number}
  */
-function sum(a, b) {
-  return Number(a) + Number(b)
-}
+const sum = (a, b) => Number(a) + Number(b);
 
 /**
- * This function takes a number and raises it to a power
- * @param x
- * @param n
+ * Raises a number to a power.
+ * @param {number} x
+ * @param {number} n
  * @returns {number}
  */
-function pow(x, n) {
-  let result = 1;
-
-  for (let i = 0; i < n; i++) {
-    result *= x;
-  }
-
-  return result;
-}
+const pow = (x, n) => x ** n;
 
 /**
- * This function calculate factorial of number
- * @param n {number}
+ * Calculates the factorial of a number.
+ * @param {number} n
  * @returns {number}
  */
-function factorial(n) {
-  return n ? n * factorial(n - 1) : 1;
-};
+const factorial = (n) => (n ? n * factorial(n - 1) : 1);
 
 /**
- * This function calculate Fibonacci sequence
- * @param n
- * @returns {*|number}
+ * Calculates the nth Fibonacci number.
+ * @param {number} n
+ * @returns {number}
  */
-function fibonacci(n) {
-  return (n > 2) ? fibonacci(n - 1) + fibonacci(n - 2) : 1;
-}
+const fibonacci = (n) => (n > 2 ? fibonacci(n - 1) + fibonacci(n - 2) : 1);
 
 /**
- * This function must remove some element for array of string by name
- * @param list {string[]}
- * @param name {string}
+ * Removes an element from an array of strings by name.
+ * @param {string[]} list
+ * @param {string} name
  * @returns {string[]}
  */
-function removeByName(list, name) {
-  let result = [...list]
-  let index = result.indexOf(name);
-  if (index !== -1) {
-    result.splice(index, 1);
-  }
-
-  return result;
-}
+const removeByName = (list, name) => list.filter(item => item !== name);
 
 /**
- * This function create counter
- * @param currentCount {number}
+ * Creates a counter function.
+ * @param {number} currentCount
  * @returns {function(): number}
  */
-function makeCounter(currentCount) {
-  return function () {
-    return currentCount++;
-  };
-}
+const makeCounter = (currentCount) => () => currentCount++;
 
 /**
- * This function create async timeout and return unixtime like timer Id
- * @param time {number}
- * @returns {number}
- */
-
-function getAsyncTimerId(time) {
-  let timerId;
-  setTimeout(() => {
-    timerId = Math.floor(Date.now() / 1000)
-  }, time);
-
-  return timerId
-};
-
-/**
- * This function return promise and multiply paraments
- * @param x{number}
+ * Creates an async timeout and returns the Unix time as the timer ID.
+ * @param {number} time
  * @returns {Promise<number>}
  */
-async function asyncMultiply(x) {
-  return new Promise(resolve => {
-    setTimeout(resolve, 3000, 2 * x);
-  });
-};
+const getAsyncTimerId = (time) => new Promise(resolve => setTimeout(() => resolve(Math.floor(Date.now() / 1000)), time));
 
 /**
- * This function create GET http request to server
- * @param url {string}
+ * Returns a promise that multiplies the parameter after a timeout.
+ * @param {number} x
+ * @returns {Promise<number>}
+ */
+const asyncMultiply = async (x) => new Promise(resolve => setTimeout(() => resolve(2 * x), 3000));
+
+/**
+ * Sends a GET HTTP request to the server.
+ * @param {string} url
  * @returns {Promise<unknown>}
  */
-function httpGet(url) {
+const httpGet = (url) => new Promise((resolve, reject) => {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
 
-  return new Promise(function (resolve, reject) {
+  xhr.onload = () => {
+    (xhr.status === 200) ? resolve(xhr.response) : reject(new Error(xhr.statusText));
+  };
 
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
+  xhr.onerror = () => reject(new Error("Network Error"));
 
-    xhr.onload = function () {
-      if (this.status == 200) {
-        resolve(this.response);
-      } else {
-        let error = new Error(this.statusText);
-        error.code = this.status;
-        reject(error);
-      }
-    };
-
-    xhr.onerror = function () {
-      reject(new Error("Network Error"));
-    };
-
-    xhr.send();
-  });
-
-}
-
+  xhr.send();
+});
